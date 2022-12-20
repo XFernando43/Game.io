@@ -49,6 +49,7 @@ class Enemy{
         this.color=color
         this.velocity=velocity
     }
+    
     draw(){
         c.beginPath()
         c.arc(this.x,this.y,this.radius,0,Math.PI*2,false)
@@ -72,14 +73,16 @@ const enemies = []
 
 function spawnEnemies(){
     setInterval(()=>{
-        const x = 100
-        const y = 100
         const radius = 30
+        const x = Math.random() < 0.5 ? 0 - radius: canvas.width + radius
+        const y = Math.random() < 0.5 ? 0 - radius: canvas.height + radius
         const color = 'violet'
+        const angle = Math.atan2(canvas.height/2 - y, canvas.width/2-x)
         const velocity = {
-            x:1,
-            y:1
+            x: Math.cos(angle),
+            y: Math.sin(angle)
         }
+        
         enemies.push(new Enemy(x,y,radius,color,velocity))
         console.log(enemies)
     },1000)
