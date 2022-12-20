@@ -64,6 +64,7 @@ function animate(){
     projectile.update()
 }
 
-addEventListener('click',(event)=>{})
+addEventListener('click',(event)=>
+{})
 
 animate()
