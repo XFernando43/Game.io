@@ -99,10 +99,19 @@ let animationId
 
 function animate(){
     animationId = requestAnimationFrame(animate)
-    c.clearRect(0,0,canvas.width,canvas.height)
+    c.fillStyle='rgba(0,0,0,0.1)'
+    c.fillRect(0,0,canvas.width,canvas.height)
     player.draw()
-    projectiles.forEach((projectile)=>{
+    projectiles.forEach((projectile, index)=>{
         projectile.update()
+        if(projectile.x - projectile.radius < 0 ||
+            projectile.x + projectile.radius > canvas.width || 
+            projectile.y + projectile.radius > canvas.height ||
+            projectile.y - projectile.radius < 0){
+            setTimeout(()=>{
+                projectiles.splice(index,1)
+            },0)
+        }
     })
 
     enemies.forEach((enemy, index)=>{
@@ -125,7 +134,7 @@ function animate(){
                 setTimeout(()=>{
                     enemies.splice(index,1)
                     projectiles.splice(projectileIndex,1)
-                })
+                },0)
             }
         })
     })
@@ -133,13 +142,14 @@ function animate(){
 }
 
 addEventListener('click',(event)=>{
+    console.log(projectiles)
     const angle = Math.atan2(
         event.clientY - canvas.height/2,
         event.clientX - canvas.width/2
     )
     const velocity = {
-        x:Math.cos(angle),
-        y:Math.sin(angle)
+        x:Math.cos(angle) * 4,
+        y:Math.sin(angle) * 4
     }
     projectiles.push(
         new Projectile(canvas.width/2,canvas.height/2,5,'aqua',velocity)
