@@ -91,12 +91,14 @@ function spawnEnemies(){
         }
         
         enemies.push(new Enemy(x,y,radius,color,velocity))
-        console.log(enemies)
+        //console.log(enemies)
     },1000)
 }
 
+let animationId
+
 function animate(){
-    requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate)
     c.clearRect(0,0,canvas.width,canvas.height)
     player.draw()
     projectiles.forEach((projectile)=>{
@@ -105,11 +107,25 @@ function animate(){
 
     enemies.forEach((enemy, index)=>{
         enemy.update()
+
+        const dist = Math.hypot(player.x - enemy.x,player.y - enemy.y)
+        
+        //end game
+        if(dist - enemy.radius - player.radius < 1){
+            console.log('end game')
+            cancelAnimationFrame(animationId)
+        }
+
         projectiles.forEach((projectile, projectileIndex)=>{
-            const dist = Math.hypot(projectile.x - enemy.x,projectile.y - enemy.y)
+            
+            const dist = Math.hypot(projectile.x - enemy.x,
+                projectile.y - enemy.y)
+
             if(dist - enemy.radius - projectile.radius < 1){
-                enemies.splice(index,1)
-                projectiles.splice(projectileIndex,1)
+                setTimeout(()=>{
+                    enemies.splice(index,1)
+                    projectiles.splice(projectileIndex,1)
+                })
             }
         })
     })
@@ -128,7 +144,7 @@ addEventListener('click',(event)=>{
     projectiles.push(
         new Projectile(canvas.width/2,canvas.height/2,5,'aqua',velocity)
     )
-    console.log(projectiles)
+    //console.log(projectiles)
 })
 
 animate()
