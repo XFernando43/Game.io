@@ -66,7 +66,7 @@ class Enemy{
 const x = canvas.width/2
 const y = canvas.height/2
 
-const player = new Player(x,y,30,'blue')
+const player = new Player(x,y,30,'white')
 
 const projectiles = []
 const enemies = []
@@ -83,7 +83,7 @@ function spawnEnemies(){
             x = Math.random() * canvas.width 
             y = Math.random() < 0.5 ? 0 - radius: canvas.height + radius
         }
-        const color = 'violet'
+        const color = `hsl(${Math.random() * 360},50%,50%)`
         const angle = Math.atan2(canvas.height/2 - y, canvas.width/2-x)
         const velocity = {
             x: Math.cos(angle),
@@ -131,10 +131,18 @@ function animate(){
                 projectile.y - enemy.y)
 
             if(dist - enemy.radius - projectile.radius < 1){
-                setTimeout(()=>{
-                    enemies.splice(index,1)
-                    projectiles.splice(projectileIndex,1)
-                },0)
+                
+                if(enemy.radius > 10){
+                    enemy.radius -= 10
+                    setTimeout(()=>{
+                        projectiles.splice(projectileIndex,1)
+                    },0)
+                }else{
+                    setTimeout(()=>{
+                        enemies.splice(index,1)
+                        projectiles.splice(projectileIndex,1)
+                    },0)
+                }
             }
         })
     })
